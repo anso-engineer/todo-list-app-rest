@@ -63,6 +63,22 @@ class Contexts(db.Model):
     Spaces_: Mapped[Optional['Spaces']] = relationship('Spaces', back_populates='Contexts')
     Tasks_: Mapped[Optional['Tasks']] = relationship('Tasks', back_populates='Contexts')
 
+    def to_dict(self, fields: Optional[list] = None) -> dict:
+        full_data = {
+            "id": self.ID,
+            "task_id": self.TaskID,
+            "space_id": self.SpaceID,
+            "actual_date": self.ActualDate,
+            "space_name": self.Spaces_.Name if self.Spaces_ else None,
+            "task_name": self.Tasks_.Name if self.Tasks_ else None,
+        }
+
+        # Return only requested fields if specified
+        if fields:
+            return {key: full_data[key] for key in fields if key in full_data}
+
+        return full_data
+
     def to_dict(self) -> dict:
         return {
             "id": self.ID,
