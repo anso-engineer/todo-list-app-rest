@@ -1,6 +1,8 @@
 from flask_sqlalchemy import SQLAlchemy
 from flask import Flask
 from flask_migrate import Migrate
+from flask_cors import CORS
+
 
 db = SQLAlchemy()
 
@@ -13,6 +15,9 @@ def create_app():
     register_routes(app, db)
 
     migrate = Migrate(app, db)
+
+    # Enable CORS for origins matching http://localhost:517*
+    CORS(app, supports_credentials=True, resources={r"/*": {"origins": r"http://localhost:517\d+"}})
 
     return app
 
