@@ -17,6 +17,7 @@ def create_app():
     migrate = Migrate(app, db)
 
     allowed_origins = [
+        "http://10.8.0.1:3000",
         "http://10.8.0.2:3000",
         "http://10.8.0.3:3000",
         "http://10.8.0.4:3000",
