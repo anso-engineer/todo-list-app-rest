@@ -16,8 +16,8 @@ def create_app():
 
     migrate = Migrate(app, db)
 
-    # Enable CORS for origins matching http://localhost:517*
-    CORS(app, supports_credentials=True, resources={r"/*": {"origins": r"http://localhost:517\d+"}})
+    # CORS(app, supports_credentials=True, resources={r"/*": {"origins": r"http://localhost:517\d+"}})
+    CORS(app, supports_credentials=True, resources={r"/*": {"origins": r"http://localhost:3000"}})
 
     return app
 

@@ -42,13 +42,13 @@ class Tasks(db.Model):
             "id": self.ID,
             "name": self.Name,
             "description": self.Description,
-            "PostponedStatus": self.PostponedStatus,
-            "Priority": self.Priority,
-            "Complexity": self.Complexity,
-            "CreationDate": self.CreationDate,
-            "Completed": self.Completed,
-            "IsTemplate": self.IsTemplate,
-            "Repeated": self.Repeated
+            "postponed_status": self.PostponedStatus,
+            "priority": self.Priority,
+            "complexity": self.Complexity,
+            "creation_date": self.CreationDate,
+            "completed": self.Completed,
+            "is_template": self.IsTemplate,
+            "repeated": self.Repeated
         }
 
 
