@@ -21,8 +21,8 @@ def create_app():
         "http://10.8.0.2:3000",
         "http://10.8.0.3:3000",
         "http://10.8.0.4:3000",
-        "http://10.8.0.5:3000"
-
+        "http://10.8.0.5:3000",
+        "http://localhost:3000",
     ]
 
     # Enable CORS with hardcoded allowed origins

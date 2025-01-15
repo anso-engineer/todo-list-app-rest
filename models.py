@@ -46,6 +46,7 @@ class Tasks(db.Model):
             "priority": self.Priority,
             "complexity": self.Complexity,
             "creation_date": self.CreationDate,
+            "completion_date": self.CompletionDate,
             "completed": self.Completed,
             "is_template": self.IsTemplate,
             "repeated": self.Repeated
