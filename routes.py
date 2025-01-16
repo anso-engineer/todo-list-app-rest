@@ -139,3 +139,47 @@ def register_routes(app, db):
             return jsonify({"error": str(e)}), 500
 
 
+    #TEMPLATES
+    @app.route('/templates', methods=['GET'])
+    def get_templates():
+        result = Tasks.query.filter_by(IsTemplate=True).all()
+        output = [task.to_dict() for task in result]
+        return jsonify(output), 200
+
+    @app.route('/templates/open', methods=['GET'])
+    def get_teplate_open():
+        result = Tasks.query.filter(Tasks.IsTemplate == 1, Tasks.Completed == 1).all()
+        output = [task.to_dict() for task in result]
+        return jsonify(output), 200
+
+    @app.route('/templates/active', methods=['GET'])
+    def get_template_active():
+        result = Tasks.query.filter(Tasks.IsTemplate == 1, Tasks.Completed == 0).all()
+        output = [task.to_dict() for task in result]
+        return jsonify(output), 200
+
+    @app.route('/templates', methods=['POST'])
+    def add_task_template():
+        # Get the JSON data from the request
+        data = request.get_json()
+
+        # Find the task by ID
+        task = Tasks.query.get(data["task_template_id"])
+        if not task:
+            return jsonify({"error": "Task not found"}), 404
+
+        if "priority" in data:
+            task.Priority = data["priority"]
+        if "complexity" in data:
+            task.Complexity = data["complexity"]
+
+        task.CompletionDate = None
+        task.Completed = 0
+        task.Repeated = task.Repeated + 1
+
+        try:
+            db.session.commit()
+            return jsonify(task.to_dict()), 200
+        except Exception as e:
+            db.session.rollback()
+            return jsonify({"error": str(e)}), 500
