@@ -1,5 +1,6 @@
 from flask import request,jsonify
 from models import Contexts, Spaces, Tasks
+from datetime import datetime
 
 
 def register_routes(app, db):
@@ -173,9 +174,14 @@ def register_routes(app, db):
         if "complexity" in data:
             task.Complexity = data["complexity"]
 
-        task.CompletionDate = None
-        task.Completed = 0
-        task.Repeated = task.Repeated + 1
+        if "mark_completed" in data: #close task
+            task.Completed = 1
+            task.CompletionDate = datetime.now().strftime("%d.%m.%Y %H:%M:%S")
+        else:                        #reopen task
+            task.Completed = 0
+            task.CompletionDate = None
+            task.Repeated = task.Repeated + 1
+            task.CreationDate = datetime.now().strftime("%d.%m.%Y %H:%M:%S")
 
         try:
             db.session.commit()
