@@ -40,7 +40,7 @@ def register_routes(app, db):
     #TASKS
     @app.route('/tasks', methods=['GET'])
     def get_tasks():
-        result = Tasks.query.all() # return empty array
+        result = Tasks.query.filter_by(Completed = False).all() # return empty array
         output = [task.to_dict() for task in result]
         return jsonify(output), 200
 
