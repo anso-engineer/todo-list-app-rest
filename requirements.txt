@@ -2,3 +2,4 @@ Flask
 Flask-Migrate
 SQLAlchemy
 alembic
+flask-cors
