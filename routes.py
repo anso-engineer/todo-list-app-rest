@@ -139,6 +139,64 @@ def register_routes(app, db):
             db.session.rollback()
             return jsonify({"error": str(e)}), 500
 
+    @app.route('/tasks/<int:task_id>/duplicate', methods=['GET'])
+    def duplicate_task(task_id):
+        # Find the original task
+        orig = Tasks.query.get(task_id)
+        if not orig:
+            return jsonify({"error": "Task not found"}), 404
+
+        # Create a new task with copied fields
+        dup = Tasks(
+            Name=f"{orig.Name} (Duplicated from Task #{orig.ID})",
+            Description=orig.Description,
+            PostponedStatus=orig.PostponedStatus,
+            Priority=orig.Priority,
+            Complexity=orig.Complexity,
+            CreationDate=orig.CreationDate,
+            CompletionDate=orig.CompletionDate,
+            Completed=0,
+            IsTemplate=0, # no sense to duplicate templates
+            Repeated=orig.Repeated
+        )
+
+        try:
+            db.session.add(dup)
+            db.session.commit()
+            return jsonify(dup.to_dict()), 201
+        except Exception as e:
+            db.session.rollback()
+            return jsonify({"error": str(e)}), 500
+
+    # TASK STATES
+    @app.route('/tasks/completed', methods=['GET'])
+    def get_completed_tasks():
+        result = Tasks.query.filter(
+            Tasks.IsTemplate == 0,
+            Tasks.Completed == 1
+        ).all()
+        output = []
+        for task in result:
+            item = task.to_dict()
+            # remove description regardless of key style
+            for k in ("description", "Description"):
+                item.pop(k, None)
+            output.append(item)
+        return jsonify(output), 200
+
+    @app.route('/tasks/active', methods=['GET'])
+    def get_active_tasks():
+        result = Tasks.query.filter(
+            Tasks.IsTemplate == 0,
+            Tasks.Completed == 0
+        ).all()
+        output = []
+        for task in result:
+            item = task.to_dict()
+            for k in ("description", "Description"):
+                item.pop(k, None)
+            output.append(item)
+        return jsonify(output), 200
 
     #TEMPLATES
     @app.route('/templates', methods=['GET'])
