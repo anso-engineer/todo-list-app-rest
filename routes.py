@@ -157,6 +157,7 @@ def register_routes(app, db):
             CompletionDate=orig.CompletionDate,
             Completed=0,
             IsTemplate=0, # no sense to duplicate templates
+            OnlyCreated=0,
             Repeated=orig.Repeated
         )
 
@@ -175,28 +176,25 @@ def register_routes(app, db):
             Tasks.IsTemplate == 0,
             Tasks.Completed == 1
         ).all()
-        output = []
-        for task in result:
-            item = task.to_dict()
-            # remove description regardless of key style
-            for k in ("description", "Description"):
-                item.pop(k, None)
-            output.append(item)
-        return jsonify(output), 200
+        return jsonify([t.to_dict() for t in result]), 200
 
     @app.route('/tasks/active', methods=['GET'])
     def get_active_tasks():
         result = Tasks.query.filter(
             Tasks.IsTemplate == 0,
-            Tasks.Completed == 0
+            Tasks.Completed == 0,
+            Tasks.OnlyCreated == 0
         ).all()
-        output = []
-        for task in result:
-            item = task.to_dict()
-            for k in ("description", "Description"):
-                item.pop(k, None)
-            output.append(item)
-        return jsonify(output), 200
+        return jsonify([t.to_dict() for t in result]), 200
+
+    @app.route('/tasks/only-created', methods=['GET'])
+    def get_created_tasks():
+        result = Tasks.query.filter(
+            Tasks.IsTemplate == 0,
+            Tasks.Completed == 0,
+            Tasks.OnlyCreated == 1
+        ).all()
+        return jsonify([t.to_dict() for t in result]), 200
 
     #TEMPLATES
     @app.route('/templates', methods=['GET'])
@@ -227,6 +225,7 @@ def register_routes(app, db):
         if not task:
             return jsonify({"error": "Task not found"}), 404
 
+        task.OnlyCreated = 1
         if "priority" in data:
             task.Priority = data["priority"]
         if "complexity" in data:

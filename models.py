@@ -32,6 +32,7 @@ class Tasks(db.Model):
     CreationDate = mapped_column(Text)
     CompletionDate = mapped_column(Text)
     Completed = mapped_column(Integer)
+    OnlyCreated = mapped_column(Integer)
     IsTemplate = mapped_column(Integer)
     Repeated = mapped_column(Integer)
 
@@ -48,6 +49,7 @@ class Tasks(db.Model):
             "creation_date": self.CreationDate,
             "completion_date": self.CompletionDate,
             "completed": self.Completed,
+            "only_created": self.OnlyCreated,
             "is_template": self.IsTemplate,
             "repeated": self.Repeated
         }
