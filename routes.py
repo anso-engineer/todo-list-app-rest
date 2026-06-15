@@ -52,7 +52,7 @@ def register_routes(app, db):
         # Validate required fields
         required_fields = ['name', 'description', 'postponed_status', 'priority',
                            'complexity', 'creation_date', 'completion_date',
-                           'completed', 'is_template', 'repeated']
+                           'completed','only_created', 'is_template', 'repeated']
         missing_fields = [field for field in required_fields if field not in data]
         if missing_fields:
             return jsonify({"error": f"Missing fields: {', '.join(missing_fields)}"}), 400
@@ -67,6 +67,7 @@ def register_routes(app, db):
             CreationDate=data['creation_date'],
             CompletionDate=data['completion_date'],
             Completed=data['completed'],
+            OnlyCreated=data['only_created'],
             IsTemplate=data['is_template'],
             Repeated=data['repeated']
         )
@@ -190,7 +191,6 @@ def register_routes(app, db):
     @app.route('/tasks/only-created', methods=['GET'])
     def get_created_tasks():
         result = Tasks.query.filter(
-            Tasks.IsTemplate == 0,
             Tasks.Completed == 0,
             Tasks.OnlyCreated == 1
         ).all()
