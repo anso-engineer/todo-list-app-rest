@@ -109,6 +109,8 @@ def register_routes(app, db):
             task.CreationDate = data["creation_date"]
         if "completion_date" in data:
             task.CompletionDate = data["completion_date"]
+        if "only_created" in data:
+            task.OnlyCreated = data["only_created"]
         if "completed" in data:
             task.Completed = data["completed"]
         if "is_template" in data:
