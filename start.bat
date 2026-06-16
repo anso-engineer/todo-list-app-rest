@@ -11,7 +11,7 @@ if exist .venv (
     cd ..\..
 
     :: Run Flask application
-    flask run
+    python -m flask run
 ) else (
     echo .venv directory not found!
 )

@@ -158,7 +158,7 @@ def register_routes(app, db):
             CompletionDate=orig.CompletionDate,
             Completed=0,
             IsTemplate=0, # no sense to duplicate templates
-            OnlyCreated=0,
+            OnlyCreated=1,
             Repeated=orig.Repeated
         )
 
